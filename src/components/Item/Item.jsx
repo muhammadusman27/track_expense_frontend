@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-
+import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 
 const Item = () => {
   const [item_name, setItemName] = useState("");
   const [item_description, setItemDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(-1);
+  const [editItem, setEditItem] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [items, setItems] = useState([]);
@@ -16,6 +17,13 @@ const Item = () => {
     setItemName("");
     setItemDescription("");
     setSelectedCategory(-1);
+  };
+
+  const edit_item = (item_obj) => {
+    setEditItem(item_obj["id"]);
+    setItemName(item_obj["name"]);
+    setItemDescription(item_obj["description"]);
+    setSelectedCategory(item_obj["category"]);
   };
 
   const get_all_categories = () => {
@@ -55,10 +63,17 @@ const Item = () => {
   };
 
   const add_new_item = (payload) => {
+    const url =
+      editItem != null
+        ? `http://127.0.0.1:8000/item/update?item_id=${editItem}`
+        : "http://127.0.0.1:8000/item/add";
     axios
-      .post("http://127.0.0.1:8000/item/add", payload)
+      .post(url, payload)
       .then(function (response) {
         if (response.status === 200) {
+          if (editItem != null) {
+            setEditItem(null);
+          }
           clear_state();
           get_all_items();
         }
@@ -66,6 +81,9 @@ const Item = () => {
       })
       .catch(function (error) {
         console.log(error);
+      })
+      .finally(() => {
+        // console.log("this will always run.")
       });
   };
 
@@ -74,7 +92,6 @@ const Item = () => {
       .get("http://127.0.0.1:8000/item/list_items")
       .then(function (response) {
         // handle success
-        console.log(response.data);
         setItems(response.data["data"]);
       })
       .catch(function (error) {
@@ -114,9 +131,11 @@ const Item = () => {
         <label htmlFor="category">Choose Category: </label>
         <select
           name="category"
+          id="category"
           value={selectedCategory}
           onChange={select_Category}
         >
+          <option value="">No Item</option>
           {categories.map((category) => {
             return (
               <option key={category.id} value={category.id}>
@@ -126,7 +145,9 @@ const Item = () => {
           })}
         </select>
         <br />
-        <input type="submit" value="Create New Item" />
+        <button type="submit">
+          {editItem != null ? "Update Item" : "Create New Item"}
+        </button>
       </form>
       <hr />
       <div>List All Items</div>
@@ -135,9 +156,10 @@ const Item = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
+              <th>Item Name</th>
+              <th>Item Description</th>
               <th>Category Name</th>
+              <th>Edit Item</th>
             </tr>
           </thead>
           <tbody>
@@ -148,6 +170,9 @@ const Item = () => {
                   <td>{item.name}</td>
                   <td>{item.description}</td>
                   <td>{item.category_name}</td>
+                  <td>
+                    <FaEdit onClick={() => edit_item(item)} />
+                  </td>
                 </tr>
               );
             })}

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-
+import { FaEdit } from "react-icons/fa";
 import axios from "axios";
 
 const Category = () => {
   const [category_name, setCategoryName] = useState("");
   const [category_description, setCategoryDescription] = useState("");
+  const [editID, setEditID] = useState(null);
 
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState([]);
@@ -12,6 +13,12 @@ const Category = () => {
   const clear_state = () => {
     setCategoryName("");
     setCategoryDescription("");
+  };
+
+  const editCategory = (category_obj) => {
+    setEditID(category_obj["id"]);
+    setCategoryName(category_obj["name"]);
+    setCategoryDescription(category_obj["description"]);
   };
 
   const addNewCategory = (e) => {
@@ -28,12 +35,19 @@ const Category = () => {
   };
 
   const add_new_category = (payload) => {
+    const url =
+      editID != null
+        ? `http://127.0.0.1:8000/category/update?category_id=${editID}`
+        : "http://127.0.0.1:8000/category/add";
     axios
-      .post("http://127.0.0.1:8000/category/add", payload)
+      .post(url, payload)
       .then(function (response) {
         if (response.status === 200) {
           clear_state();
           get_all_categories();
+          if (editID != null) {
+            setEditID(null);
+          }
         }
         console.log(response);
       })
@@ -47,7 +61,6 @@ const Category = () => {
       .get("http://127.0.0.1:8000/category/list_categories")
       .then(function (response) {
         // handle success
-        console.log(response.data);
         setCategories(response.data["data"]);
       })
       .catch(function (error) {
@@ -83,7 +96,9 @@ const Category = () => {
           value={category_description}
         />
         <br />
-        <input type="submit" value="Create New Category" />
+        <button type="submit">
+          {editID != null ? "Update Category" : "Create New Category"}
+        </button>
       </form>
       <hr />
       <div>List All Categories</div>
@@ -94,6 +109,7 @@ const Category = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Description</th>
+              <th>Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -103,6 +119,9 @@ const Category = () => {
                   <td>{category.id}</td>
                   <td>{category.name}</td>
                   <td>{category.description}</td>
+                  <td>
+                    <FaEdit onClick={() => editCategory(category)} />
+                  </td>
                 </tr>
               );
             })}
