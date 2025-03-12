@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
+import Button from "../ui/Button/Button";
+import InputField from "../ui/InputField/InputField";
+import TextArea from "../ui/TextArea/TextArea";
+import Table from "../ui/Table/Table";
+
+const columns = [
+  { key: "name", label: "Name" },
+  { key: "description", label: "Description" },
+];
 
 const Category = () => {
   const [category_name, setCategoryName] = useState("");
@@ -82,51 +91,52 @@ const Category = () => {
     <>
       <div>Create New Categories</div>
       <form onSubmit={(e) => addNewCategory(e)}>
-        <input
-          type="text"
-          placeholder="Category Name"
-          onChange={(e) => setCategoryName(e.target.value)}
-          value={category_name}
+        <InputField
+          field_type="text"
+          placeholder_text="Category Name"
+          field_value={category_name}
+          field_on_change={(e) => setCategoryName(e.target.value)}
         />
         <br />
-        <input
-          type="text"
-          placeholder="Category Description"
-          onChange={(e) => setCategoryDescription(e.target.value)}
-          value={category_description}
+        <TextArea
+          placeholder_text="Category Description"
+          field_value={category_description}
+          field_on_change={(e) => setCategoryDescription(e.target.value)}
         />
         <br />
-        <button type="submit">
-          {editID != null ? "Update Category" : "Create New Category"}
-        </button>
+        <Button
+          button_type="submit"
+          text={editID != null ? "Update Category" : "Create New Category"}
+          background="black"
+          color="white"
+        />
       </form>
       <hr />
       <div>List All Categories</div>
       {!isLoading && categories.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map((category) => {
-              return (
-                <tr key={category.id}>
-                  <td>{category.id}</td>
-                  <td>{category.name}</td>
-                  <td>{category.description}</td>
-                  <td>
-                    <FaEdit onClick={() => editCategory(category)} />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        // <table>
+        //   <thead>
+        //     <tr>
+        //       <th>Name</th>
+        //       <th>Description</th>
+        //       <th>Edit</th>
+        //     </tr>
+        //   </thead>
+        //   <tbody>
+        //     {categories.map((category) => {
+        //       return (
+        //         <tr key={category.id}>
+        //           <td>{category.name}</td>
+        //           <td>{category.description}</td>
+        //           <td>
+        //             <FaEdit onClick={() => editCategory(category)} />
+        //           </td>
+        //         </tr>
+        //       );
+        //     })}
+        //   </tbody>
+        // </table>
+        <Table columns={columns} data={categories} edit_fun={editCategory} />
       ) : (
         <p>no data</p>
       )}

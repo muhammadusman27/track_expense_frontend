@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
+import Button from "../ui/Button/Button";
+import InputField from "../ui/InputField/InputField";
+import TextArea from "../ui/TextArea/TextArea";
+import SelectField from "../ui/SelectField/SelectField";
 import { FaEdit } from "react-icons/fa";
 import axios from "axios";
+
+const weights = [
+  { key: "kg", value: "kg (kilogram)" },
+  { key: "g", value: "g (gram)" },
+  { key: "ml", value: "ml (milli-liter)" },
+];
 
 const Expense = () => {
   const [allItems, setAllItems] = useState([]);
@@ -8,6 +18,7 @@ const Expense = () => {
 
   const [item, setItem] = useState(-1);
   const [quantity, setQuantity] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [weight, setWeight] = useState("");
@@ -36,6 +47,7 @@ const Expense = () => {
     setEditExpense(expense_obj["id"]);
     setItem(expense_obj["item"] != null ? expense_obj["item"] : "");
     setQuantity(expense_obj["quantity"] != null ? expense_obj["quantity"] : "");
+    setName(expense_obj["name"]);
     setDescription(
       expense_obj["description"] != null ? expense_obj["description"] : ""
     );
@@ -73,6 +85,7 @@ const Expense = () => {
       .then((response) => {
         if (response.status === 200) {
           clear_item_form();
+          get_all_expenses();
         }
       })
       .catch((error) => {
@@ -84,9 +97,10 @@ const Expense = () => {
   };
 
   const clear_item_form = () => {
+    setName("");
+    setDescription("");
     setItem(-1);
     setQuantity("");
-    setDescription("");
     setPrice("");
     setWeight("");
     setWeightUnit("");
@@ -97,9 +111,10 @@ const Expense = () => {
     event.preventDefault();
 
     const payload = {
+      name: name,
+      description: description,
       item: item === "" ? null : item,
       quantity: quantity,
-      description: description,
       price: price,
       weight: weight === "" ? null : weight,
       weight_unit: weight_unit === "" ? null : weight_unit,
@@ -107,8 +122,6 @@ const Expense = () => {
     };
 
     add_new_expense(payload);
-
-    // console.log("payload : ", payload);
   };
 
   useEffect(() => {
@@ -120,75 +133,75 @@ const Expense = () => {
     <>
       <div>Create New Expense</div>
       <form onSubmit={(e) => create_new_expense(e)}>
-        <label htmlFor="item">Choose Item: </label>
-        <select
-          name="item"
-          id="item"
+        <InputField
+          field_type="text"
+          placeholder_text="Expense Name"
+          field_value={name}
+          field_on_change={(e) => setName(e.target.value)}
+        />
+        <br />
+        <TextArea
+          placeholder_text="Expense Description"
+          field_value={description}
+          field_on_change={(e) => setDescription(e.target.value)}
+        />
+        <br />
+        <SelectField
+          lable_id="item"
+          label_text="Choose Item"
           value={item}
-          onChange={(e) => setItem(e.target.value)}
-        >
-          <option value="">No Item</option>
-          {allItems.map((single_item, index) => {
-            // if (index == 0) return <option value="">No Item</option>;
-            return (
-              <option key={single_item.id} value={single_item.id}>
-                {single_item.name}
-              </option>
-            );
-          })}
-        </select>
-        <br />
-        <input
-          type="number"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          placeholder="Quantity"
+          data={allItems}
+          change_function={(e) => setItem(e.target.value)}
+          default_option_value=""
+          default_option_text="No Item"
+          value_key="id"
+          value_text="name"
         />
         <br />
-        <input
-          type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Description"
+        <InputField
+          field_type="number"
+          placeholder_text="Quantity"
+          field_value={quantity}
+          field_on_change={(e) => setQuantity(e.target.value)}
         />
         <br />
-        <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          placeholder="Price"
+        <InputField
+          field_type="number"
+          placeholder_text="Price"
+          field_value={price}
+          field_on_change={(e) => setPrice(e.target.value)}
         />
         <br />
-        <input
-          type="number"
-          value={weight}
-          onChange={(e) => setWeight(e.target.value)}
-          placeholder="Weight"
+        <InputField
+          field_type="number"
+          placeholder_text="Weight"
+          field_value={weight}
+          field_on_change={(e) => setWeight(e.target.value)}
         />
         <br />
-        <label htmlFor="unit">Choose Unit: </label>
-        <select
-          name="unit"
-          id="unit"
+        <SelectField
+          lable_id="unit"
+          label_text="Choose Unit"
           value={weight_unit}
-          onChange={(e) => setWeightUnit(e.target.value)}
-        >
-          <option value="">No unit</option>
-          <option value="kg">kg (kilogram)</option>
-          <option value="g">g (gram)</option>
-          <option value="ml">ml (milli-liter)</option>
-        </select>
-        <br />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          placeholder="Date"
+          data={weights}
+          change_function={(e) => setWeightUnit(e.target.value)}
+          default_option_value=""
+          default_option_text="No Unit"
+          value_key="key"
+          value_text="value"
         />
         <br />
-        <button type="submit">
-          {editExpense != null ? "Update Expense" : "Create New Expense"}
-        </button>
+        <InputField
+          field_type="date"
+          placeholder_text="Date"
+          field_value={date}
+          field_on_change={(e) => setDate(e.target.value)}
+        />
+        <br />
+        <Button
+          button_type="submit"
+          text={editExpense != null ? "Update Expense" : "Create New Expense"}
+        />
       </form>
       <hr />
       <div>List All Expenses</div>

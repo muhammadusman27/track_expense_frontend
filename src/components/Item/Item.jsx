@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
+import Button from "../ui/Button/Button";
+import InputField from "../ui/InputField/InputField";
+import TextArea from "../ui/TextArea/TextArea";
+import SelectField from "../ui/SelectField/SelectField";
 import { FaEdit } from "react-icons/fa";
+import Table from "../ui/Table/Table";
 import axios from "axios";
+
+const columns = [
+  {key: "name", lable: "Item Name"},
+  {key: "description", lable: "Item Description"},
+  {key: "category_name", lable: "Category Name"},
+]
 
 const Item = () => {
   const [item_name, setItemName] = useState("");
@@ -114,70 +125,65 @@ const Item = () => {
     <>
       <div>Create New Items</div>
       <form onSubmit={(e) => addNewItem(e)}>
-        <input
-          type="text"
-          placeholder="Item Name"
-          onChange={(e) => setItemName(e.target.value)}
-          value={item_name}
+        <InputField
+          field_type="text"
+          placeholder_text="Item Name"
+          field_value={item_name}
+          field_on_change={(e) => setItemName(e.target.value)}
         />
         <br />
-        <input
-          type="text"
-          placeholder="Item Description"
-          onChange={(e) => setItemDescription(e.target.value)}
-          value={item_description}
+        <TextArea
+          placeholder_text="Item Description"
+          field_value={item_description}
+          field_on_change={(e) => setItemDescription(e.target.value)}
         />
         <br />
-        <label htmlFor="category">Choose Category: </label>
-        <select
-          name="category"
-          id="category"
+        <SelectField
+          lable_id="category_id"
+          label_text="Choose Category"
           value={selectedCategory}
-          onChange={select_Category}
-        >
-          <option value="">No Item</option>
-          {categories.map((category) => {
-            return (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            );
-          })}
-        </select>
+          data={categories}
+          change_function={select_Category}
+          default_option_value=""
+          default_option_text="No Item"
+          value_key="id"
+          value_text="name"
+        />
         <br />
-        <button type="submit">
-          {editItem != null ? "Update Item" : "Create New Item"}
-        </button>
+        <Button
+          button_type="submit"
+          text={editItem != null ? "Update Item" : "Create New Item"}
+        />
       </form>
       <hr />
       <div>List All Items</div>
       {!isLoading && items.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Item Name</th>
-              <th>Item Description</th>
-              <th>Category Name</th>
-              <th>Edit Item</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => {
-              return (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.name}</td>
-                  <td>{item.description}</td>
-                  <td>{item.category_name}</td>
-                  <td>
-                    <FaEdit onClick={() => edit_item(item)} />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        // <table>
+        //   <thead>
+        //     <tr>
+        //       <th>Item Name</th>
+        //       <th>Item Description</th>
+        //       <th>Category Name</th>
+        //       <th>Edit Item</th>
+        //     </tr>
+        //   </thead>
+        //   <tbody>
+        //     {items.map((item) => {
+        //       return (
+        //         <tr key={item.id}>
+        //           <td>{item.name}</td>
+        //           <td>{item.description}</td>
+        //           <td>{item.category_name}</td>
+        //           <td>
+        //             <FaEdit onClick={() => edit_item(item)} />
+        //           </td>
+        //         </tr>
+        //       );
+        //     })}
+        //   </tbody>
+        // </table>
+        <Table columns={columns} data={items} edit_fun={edit_item} />
+        // { columns, data, edit_fun 
       ) : (
         <p>no data</p>
       )}
