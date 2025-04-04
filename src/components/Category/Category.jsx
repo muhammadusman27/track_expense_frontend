@@ -65,9 +65,9 @@ const Category = () => {
       });
   };
 
-  const get_all_categories = () => {
+  const get_all_categories = (config) => {
     axios
-      .get("http://127.0.0.1:8000/category/list_categories")
+      .get("http://127.0.0.1:8000/category/list_categories", config)
       .then(function (response) {
         // handle success
         setCategories(response.data["data"]);
@@ -82,7 +82,16 @@ const Category = () => {
   };
 
   useEffect(() => {
-    get_all_categories();
+    const access = localStorage.getItem("access_token", null);
+    let config;
+    if (access != null) {
+      config = {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      };
+    }
+    get_all_categories(config);
 
     setIsLoading(false);
   }, []);
