@@ -4,7 +4,7 @@ import InputField from "../ui/InputField/InputField";
 import TextArea from "../ui/TextArea/TextArea";
 import SelectField from "../ui/SelectField/SelectField";
 import { FaEdit } from "react-icons/fa";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 
 const weights = [
   { key: "kg", value: "kg (kilogram)" },
@@ -27,8 +27,8 @@ const Expense = () => {
   const [editExpense, setEditExpense] = useState(null);
 
   const get_all_items = () => {
-    axios
-      .get("http://127.0.0.1:8000/item/list_items")
+    axiosInstance
+      .get("item/list_items")
       .then(function (response) {
         // handle success
         // console.log(response.data);
@@ -60,8 +60,8 @@ const Expense = () => {
   };
 
   const get_all_expenses = () => {
-    axios
-      .get("http://127.0.0.1:8000/expense/list_expenses")
+    axiosInstance
+      .get("expense/list_expenses")
       .then(function (response) {
         // handle success
         setAllExpenses(response.data["data"]);
@@ -78,9 +78,9 @@ const Expense = () => {
   const add_new_expense = (payload) => {
     const url =
       editExpense != null
-        ? `http://127.0.0.1:8000/expense/update?expense_id=${editExpense}`
-        : "http://127.0.0.1:8000/expense/add";
-    axios
+        ? `expense/update?expense_id=${editExpense}`
+        : "expense/add";
+    axiosInstance
       .post(url, payload)
       .then((response) => {
         if (response.status === 200) {

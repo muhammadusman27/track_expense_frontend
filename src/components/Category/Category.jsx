@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
-import axios from "axios";
 import Button from "../ui/Button/Button";
 import InputField from "../ui/InputField/InputField";
 import TextArea from "../ui/TextArea/TextArea";
 import Table from "../ui/Table/Table";
+import axiosInstance from "../../axiosInstance";
 
 const columns = [
   { key: "name", label: "Name" },
@@ -45,10 +45,8 @@ const Category = () => {
 
   const add_new_category = (payload) => {
     const url =
-      editID != null
-        ? `http://127.0.0.1:8000/category/update?category_id=${editID}`
-        : "http://127.0.0.1:8000/category/add";
-    axios
+      editID != null ? `category/update?category_id=${editID}` : "category/add";
+    axiosInstance
       .post(url, payload)
       .then(function (response) {
         if (response.status === 200) {
@@ -66,8 +64,8 @@ const Category = () => {
   };
 
   const get_all_categories = (config) => {
-    axios
-      .get("http://127.0.0.1:8000/category/list_categories", config)
+    axiosInstance
+      .get("category/list_categories", config)
       .then(function (response) {
         // handle success
         setCategories(response.data["data"]);

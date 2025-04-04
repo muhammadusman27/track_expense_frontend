@@ -5,13 +5,13 @@ import TextArea from "../ui/TextArea/TextArea";
 import SelectField from "../ui/SelectField/SelectField";
 import { FaEdit } from "react-icons/fa";
 import Table from "../ui/Table/Table";
-import axios from "axios";
+import axiosInstance from "../../axiosInstance";
 
 const columns = [
-  {key: "name", lable: "Item Name"},
-  {key: "description", lable: "Item Description"},
-  {key: "category_name", lable: "Category Name"},
-]
+  { key: "name", lable: "Item Name" },
+  { key: "description", lable: "Item Description" },
+  { key: "category_name", lable: "Category Name" },
+];
 
 const Item = () => {
   const [item_name, setItemName] = useState("");
@@ -38,8 +38,8 @@ const Item = () => {
   };
 
   const get_all_categories = () => {
-    axios
-      .get("http://127.0.0.1:8000/category/list_categories")
+    axiosInstance
+      .get("category/list_categories")
       .then(function (response) {
         // handle success
         console.log(response.data);
@@ -75,10 +75,8 @@ const Item = () => {
 
   const add_new_item = (payload) => {
     const url =
-      editItem != null
-        ? `http://127.0.0.1:8000/item/update?item_id=${editItem}`
-        : "http://127.0.0.1:8000/item/add";
-    axios
+      editItem != null ? `item/update?item_id=${editItem}` : "item/add";
+    axiosInstance
       .post(url, payload)
       .then(function (response) {
         if (response.status === 200) {
@@ -99,8 +97,8 @@ const Item = () => {
   };
 
   const get_all_items = () => {
-    axios
-      .get("http://127.0.0.1:8000/item/list_items")
+    axiosInstance
+      .get("item/list_items")
       .then(function (response) {
         // handle success
         setItems(response.data["data"]);
@@ -183,8 +181,8 @@ const Item = () => {
         //   </tbody>
         // </table>
         <Table columns={columns} data={items} edit_fun={edit_item} />
-        // { columns, data, edit_fun 
       ) : (
+        // { columns, data, edit_fun
         <p>no data</p>
       )}
     </>
