@@ -7,8 +7,8 @@ import Table from "../ui/Table/Table";
 import axiosInstance from "../../axiosInstance";
 
 const columns = [
-  { key: "name", label: "Name" },
-  { key: "description", label: "Description" },
+  { key: "name", label: "Category Name" },
+  { key: "description", label: "Category Description" },
 ];
 
 const Category = () => {
@@ -112,28 +112,6 @@ const Category = () => {
       <hr />
       <div>List All Categories</div>
       {!isLoading && categories.length > 0 ? (
-        // <table>
-        //   <thead>
-        //     <tr>
-        //       <th>Name</th>
-        //       <th>Description</th>
-        //       <th>Edit</th>
-        //     </tr>
-        //   </thead>
-        //   <tbody>
-        //     {categories.map((category) => {
-        //       return (
-        //         <tr key={category.id}>
-        //           <td>{category.name}</td>
-        //           <td>{category.description}</td>
-        //           <td>
-        //             <FaEdit onClick={() => editCategory(category)} />
-        //           </td>
-        //         </tr>
-        //       );
-        //     })}
-        //   </tbody>
-        // </table>
         <Table columns={columns} data={categories} edit_fun={editCategory} />
       ) : (
         <p>no data</p>

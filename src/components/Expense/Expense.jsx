@@ -3,8 +3,8 @@ import Button from "../ui/Button/Button";
 import InputField from "../ui/InputField/InputField";
 import TextArea from "../ui/TextArea/TextArea";
 import SelectField from "../ui/SelectField/SelectField";
-import { FaEdit } from "react-icons/fa";
 import axiosInstance from "../../axiosInstance";
+import Table from "../ui/Table/Table";
 
 const weights = [
   { key: "kg", value: "kg (kilogram)" },
@@ -12,11 +12,23 @@ const weights = [
   { key: "ml", value: "ml (milli-liter)" },
 ];
 
+const columns = [
+  { key: "name", label: "Expense Name" },
+  { key: "description", label: "Expense Description" },
+  { key: "category_name", label: "Category Name" },
+  { key: "quantity", label: "Quantity" },
+  { key: "weight_unit", label: "Weight Unit" },
+  { key: "price", label: "Price" },
+  { key: "date", label: "Date" },
+];
+
 const Expense = () => {
+  const [allCategories, setAllCategories] = useState([]);
   const [allItems, setAllItems] = useState([]);
   const [allExpenses, setAllExpenses] = useState([]);
 
   const [item, setItem] = useState(-1);
+  const [category, setCategory] = useState(-1);
   const [quantity, setQuantity] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -33,6 +45,23 @@ const Expense = () => {
         // handle success
         // console.log(response.data);
         setAllItems(response.data["data"]);
+      })
+      .catch(function (error) {
+        // handle error
+        // console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
+
+  const get_all_categories = () => {
+    axiosInstance
+      .get("category/list_categories")
+      .then(function (response) {
+        // handle success
+        // console.log(response.data);
+        setAllCategories(response.data["data"]);
       })
       .catch(function (error) {
         // handle error
@@ -100,7 +129,8 @@ const Expense = () => {
     setName("");
     setDescription("");
     setItem(-1);
-    setQuantity("");
+    setCategory(-1);
+    setQuantity('');
     setPrice("");
     setWeight("");
     setWeightUnit("");
@@ -113,7 +143,8 @@ const Expense = () => {
     const payload = {
       name: name,
       description: description,
-      item: item === "" ? null : item,
+      item: item === -1 ? null : item,
+      category: category === -1 ? null : category,
       quantity: quantity,
       price: price,
       weight: weight === "" ? null : weight,
@@ -127,6 +158,7 @@ const Expense = () => {
   useEffect(() => {
     get_all_expenses();
     get_all_items();
+    get_all_categories();
   }, []);
 
   return (
@@ -144,6 +176,18 @@ const Expense = () => {
           placeholder_text="Expense Description"
           field_value={description}
           field_on_change={(e) => setDescription(e.target.value)}
+        />
+        <br />
+        <SelectField
+          lable_id="category"
+          label_text="Choose Category"
+          value={category}
+          data={allCategories}
+          change_function={(e) => setCategory(e.target.value)}
+          default_option_value=""
+          default_option_text="No Category"
+          value_key="id"
+          value_text="name"
         />
         <br />
         <SelectField
@@ -206,38 +250,7 @@ const Expense = () => {
       <hr />
       <div>List All Expenses</div>
       {allExpenses.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Expense Name</th>
-              <th>Expense Description</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Weight</th>
-              <th>Weight Unit</th>
-              <th>Date</th>
-              <th>Edit</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allExpenses.map((exp) => {
-              return (
-                <tr key={exp.id}>
-                  <td>{exp.item_name}</td>
-                  <td>{exp.description}</td>
-                  <td>{exp.quantity}</td>
-                  <td>{exp.price}</td>
-                  <td>{exp.weight}</td>
-                  <td>{exp.weight_unit}</td>
-                  <td>{exp.date}</td>
-                  <td>
-                    <FaEdit onClick={() => edit_expense(exp)} />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <Table columns={columns} data={allExpenses} edit_fun={edit_expense} />
       ) : (
         <p>No Record</p>
       )}

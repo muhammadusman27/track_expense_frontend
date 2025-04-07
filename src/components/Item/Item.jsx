@@ -8,9 +8,9 @@ import Table from "../ui/Table/Table";
 import axiosInstance from "../../axiosInstance";
 
 const columns = [
-  { key: "name", lable: "Item Name" },
-  { key: "description", lable: "Item Description" },
-  { key: "category_name", lable: "Category Name" },
+  { key: "name", label: "Item Name" },
+  { key: "description", label: "Item Description" },
+  { key: "category_name", label: "Category Name" },
 ];
 
 const Item = () => {
@@ -156,33 +156,8 @@ const Item = () => {
       <hr />
       <div>List All Items</div>
       {!isLoading && items.length > 0 ? (
-        // <table>
-        //   <thead>
-        //     <tr>
-        //       <th>Item Name</th>
-        //       <th>Item Description</th>
-        //       <th>Category Name</th>
-        //       <th>Edit Item</th>
-        //     </tr>
-        //   </thead>
-        //   <tbody>
-        //     {items.map((item) => {
-        //       return (
-        //         <tr key={item.id}>
-        //           <td>{item.name}</td>
-        //           <td>{item.description}</td>
-        //           <td>{item.category_name}</td>
-        //           <td>
-        //             <FaEdit onClick={() => edit_item(item)} />
-        //           </td>
-        //         </tr>
-        //       );
-        //     })}
-        //   </tbody>
-        // </table>
         <Table columns={columns} data={items} edit_fun={edit_item} />
       ) : (
-        // { columns, data, edit_fun
         <p>no data</p>
       )}
     </>
