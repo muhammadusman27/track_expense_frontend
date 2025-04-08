@@ -50,7 +50,11 @@ function update_token(refres_token) {
       localStorage.setItem("access_token", response["data"]["access"]);
     })
     .catch((error) => {
-      // console.log("catch of refresh token = ", error);
+      console.log("catch of refresh token = ", error.status);
+      if (error.status === 401) {
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+      }
     })
     .finally(() => {
       // console.log("refresh token finally block = ");

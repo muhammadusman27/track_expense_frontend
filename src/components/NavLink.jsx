@@ -35,6 +35,7 @@ function App() {
           </ul>
         </div>
 
+        <div style={{textAlign: "center"}}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/category" element={<Category />} />
@@ -43,6 +44,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
+        </div>
       </Router>
     </>
   );
