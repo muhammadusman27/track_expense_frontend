@@ -5,6 +5,7 @@ import TextArea from "../ui/TextArea/TextArea";
 import SelectField from "../ui/SelectField/SelectField";
 import axiosInstance from "../../axiosInstance";
 import Table from "../ui/Table/Table";
+import PieChart from "./PieChart.jsx";
 
 const weights = [
   { key: "kg", value: "kg (kilogram)" },
@@ -37,6 +38,11 @@ const Expense = () => {
   const [weight_unit, setWeightUnit] = useState("");
   const [date, setDate] = useState("");
   const [editExpense, setEditExpense] = useState(null);
+
+  const [chartData, setChartData] = useState(null);
+
+  // filter by search or category
+  const [filterCategory, setFilterCategory] = useState('');
 
   const get_all_items = () => {
     axiosInstance
@@ -89,8 +95,12 @@ const Expense = () => {
   };
 
   const get_all_expenses = () => {
+    let url = "";
+    if (filterCategory) {
+      url = `?category_id=${filterCategory}`;
+    }
     axiosInstance
-      .get("expense/list_expenses")
+      .get(`expense/list_expenses${url}`)
       .then(function (response) {
         // handle success
         setAllExpenses(response.data["data"]);
@@ -130,7 +140,7 @@ const Expense = () => {
     setDescription("");
     setItem(-1);
     setCategory(-1);
-    setQuantity('');
+    setQuantity("");
     setPrice("");
     setWeight("");
     setWeightUnit("");
@@ -155,10 +165,28 @@ const Expense = () => {
     add_new_expense(payload);
   };
 
+  const get_all_chart_data = () => {
+    axiosInstance
+      .get("expense/chart")
+      .then(function (response) {
+        // handle success
+        // console.log("data ", response.data["data"]);
+        setChartData(response.data["data"]);
+      })
+      .catch(function (error) {
+        // handle error
+        // console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
+
   useEffect(() => {
     get_all_expenses();
     get_all_items();
     get_all_categories();
+    get_all_chart_data();
   }, []);
 
   return (
@@ -249,11 +277,34 @@ const Expense = () => {
       </form>
       <hr />
       <div>List All Expenses</div>
+      {/* filter by category */}
+      <SelectField
+        lable_id="filter_category"
+        label_text="Choose Category"
+        value={filterCategory}
+        data={allCategories}
+        change_function={(e) => setFilterCategory(e.target.value)}
+        default_option_value=""
+        default_option_text="No Category"
+        value_key="id"
+        value_text="name"
+      />
+      <br /> <br />
       {allExpenses.length > 0 ? (
         <Table columns={columns} data={allExpenses} edit_fun={edit_expense} />
       ) : (
         <p>No Record</p>
       )}
+      <div>
+        {chartData != null ? (
+          <PieChart
+            label={chartData["labels"]}
+            chart_data={chartData["data"]}
+          />
+        ) : (
+          ""
+        )}
+      </div>
     </>
   );
 };

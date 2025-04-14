@@ -48,6 +48,7 @@ function update_token(refres_token) {
     .post("http://127.0.0.1:8000/account/token/refresh/", payload)
     .then((response) => {
       localStorage.setItem("access_token", response["data"]["access"]);
+      localStorage.setItem("refresh_token", response["data"]["refresh"]);
     })
     .catch((error) => {
       console.log("catch of refresh token = ", error.status);
