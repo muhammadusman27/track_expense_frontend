@@ -42,7 +42,7 @@ const Expense = () => {
   const [chartData, setChartData] = useState(null);
 
   // filter by search or category
-  const [filterCategory, setFilterCategory] = useState('');
+  const [filterCategory, setFilterCategory] = useState("");
 
   const get_all_items = () => {
     axiosInstance
@@ -94,7 +94,7 @@ const Expense = () => {
     setDate(expense_obj["date"] != null ? expense_obj["date"] : "");
   };
 
-  const get_all_expenses = () => {
+  const get_all_expenses = (val) => {
     let url = "";
     if (filterCategory) {
       url = `?category_id=${filterCategory}`;
@@ -283,8 +283,11 @@ const Expense = () => {
         label_text="Choose Category"
         value={filterCategory}
         data={allCategories}
-        change_function={(e) => setFilterCategory(e.target.value)}
-        default_option_value=""
+        change_function={(e) => {
+          setFilterCategory(e.target.value);
+          get_all_expenses(e.target.value);
+        }}
+        default_option_value="0"
         default_option_text="No Category"
         value_key="id"
         value_text="name"
