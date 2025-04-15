@@ -94,10 +94,10 @@ const Expense = () => {
     setDate(expense_obj["date"] != null ? expense_obj["date"] : "");
   };
 
-  const get_all_expenses = (val) => {
+  const get_all_expenses = (value=null) => {
     let url = "";
-    if (filterCategory) {
-      url = `?category_id=${filterCategory}`;
+    if (value && value != '0') {
+      url = `?category_id=${value}`;
     }
     axiosInstance
       .get(`expense/list_expenses${url}`)
@@ -284,7 +284,7 @@ const Expense = () => {
         value={filterCategory}
         data={allCategories}
         change_function={(e) => {
-          setFilterCategory(e.target.value);
+          setFilterCategory(e.target.value)
           get_all_expenses(e.target.value);
         }}
         default_option_value="0"
