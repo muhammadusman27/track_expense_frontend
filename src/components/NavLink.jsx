@@ -5,6 +5,7 @@ import Expense from "./Expense/Expense";
 import Home from "./Home/Home";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
+import Income from "./Income/Income";
 import "./NavLink.css";
 
 function App() {
@@ -27,6 +28,9 @@ function App() {
               <Link to="/expense">Expenses</Link>
             </li>
             <li>
+              <Link to="/income">Income</Link>
+            </li>
+            <li>
               <Link to="/login">Login</Link>
             </li>
             <li>
@@ -35,15 +39,16 @@ function App() {
           </ul>
         </div>
 
-        <div style={{textAlign: "center"}}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/category" element={<Category />} />
-          <Route path="/item" element={<Item />} />
-          <Route path="/expense" element={<Expense />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+        <div style={{ textAlign: "center" }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/category" element={<Category />} />
+            <Route path="/item" element={<Item />} />
+            <Route path="/expense" element={<Expense />} />
+            <Route path="/income" element={<Income />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
         </div>
       </Router>
     </>
