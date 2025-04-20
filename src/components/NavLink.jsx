@@ -6,6 +6,7 @@ import Home from "./Home/Home";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
 import Income from "./Income/Income";
+import AddIncome from "./Income/AddIncome";
 import "./NavLink.css";
 
 function App() {
@@ -21,14 +22,17 @@ function App() {
             <li>
               <Link to="/category">Categories</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/item">Items</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/expense">Expenses</Link>
             </li>
             <li>
               <Link to="/income">Income</Link>
+            </li>
+            <li>
+              <Link to="/add_income">Add Income</Link>
             </li>
             <li>
               <Link to="/login">Login</Link>
@@ -43,9 +47,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/category" element={<Category />} />
-            <Route path="/item" element={<Item />} />
+            {/* <Route path="/item" element={<Item />} /> */}
             <Route path="/expense" element={<Expense />} />
             <Route path="/income" element={<Income />} />
+            <Route path="/add_income" element={<AddIncome />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>

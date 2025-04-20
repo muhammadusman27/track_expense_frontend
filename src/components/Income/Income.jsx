@@ -7,26 +7,24 @@ import Table from "../ui/Table/Table";
 
 const columns = [
   { key: "name", label: "Name" },
-  { key: "amount", label: "Amount" },
-  { key: "description", label: "Description" },
-  { key: "date", label: "Date" },
+  { key: "description", label: "Description" }
 ];
 
 const Income = () => {
   const [incomeData, setIncomeData] = useState(null);
 
   const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
+  // const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
+  // const [date, setDate] = useState("");
 
   const [editIncomeID, setEditIncomeID] = useState(null);
 
   const cleat_income_state = () => {
     setName("");
-    setAmount("");
+    // setAmount("");
     setDescription("");
-    setDate("");
+    // setDate("");
   };
 
   const create_update_income = (e) => {
@@ -57,9 +55,9 @@ const Income = () => {
   const get_income_payload = () => {
     return {
       name: name,
-      amount: amount,
+      // amount: amount,
       description: description,
-      date: date,
+      // date: date,
     };
   };
 
@@ -75,11 +73,11 @@ const Income = () => {
   const setEditIncome = (income_obj) => {
     setEditIncomeID(income_obj["id"]);
     setName(income_obj["name"]);
-    setAmount(income_obj["amount"]);
+    // setAmount(income_obj["amount"]);
     setDescription(
       income_obj["description"] === null ? "" : income_obj["description"]
     );
-    setDate(income_obj["date"]);
+    // setDate(income_obj["date"]);
   };
 
   useEffect(() => {
@@ -97,29 +95,18 @@ const Income = () => {
           field_on_change={(e) => setName(e.target.value)}
         />
         <br />
-        <InputField
-          field_type="number"
-          placeholder_text="Amount"
-          field_value={amount}
-          field_on_change={(e) => setAmount(e.target.value)}
-        />
-        <br />
+
         <TextArea
           placeholder_text="Description"
           field_value={description}
           field_on_change={(e) => setDescription(e.target.value)}
         />
         <br />
-        <InputField
-          field_type="date"
-          placeholder_text="Income Date"
-          field_value={date}
-          field_on_change={(e) => setDate(e.target.value)}
-        />
-        <br />
+        
         <Button
           button_type="submit"
-          text={setEditIncomeID ? "Update Income" : "Create Income"}
+          text={editIncomeID ? "Update Income" : "Create Income"}
+          
         />
       </form>
       <hr />
