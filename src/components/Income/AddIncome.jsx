@@ -9,8 +9,10 @@ import Table from "../ui/Table/Table";
 
 const AddIncome = () => {
   const [incomeData, setIncomeData] = useState(null);
+  const [accountData, setAccountData] = useState(null);
 
-  const [income, setIncome] = useState(null);
+  const [income, setIncome] = useState('');
+  const [account, setAccount] = useState('');
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
 
@@ -25,9 +27,53 @@ const AddIncome = () => {
   };
 
 
+  const get_all_account_data = () => {
+    axiosInstance.get("account_balance/list_account").then((response) => {
+      if (response.status === 200) {
+        setAccountData(response.data["data"]);
+        console.log("account data = ", response.data["data"]);
+      }
+    });
+  };
+
+  const addNewCategory = (e) => {
+    e.preventDefault();
+    console.log("Name = ", category_name);
+    console.log("Description = ", category_description);
+
+    const payload = {
+      name: category_name,
+      description: category_description,
+    };
+
+    add_new_category(payload);
+  };
+
+  const add_new_category = (payload) => {
+    const url =
+      editID != null ? `category/update?category_id=${editID}` : "category/add";
+    axiosInstance
+      .post(url, payload)
+      .then(function (response) {
+        if (response.status === 200) {
+          clear_state();
+          get_all_categories();
+          if (editID != null) {
+            setEditID(null);
+          }
+        }
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+
 
   useEffect(() => {
     get_all_income_data();
+    get_all_account_data()
   }, []);
 
   return (
@@ -48,6 +94,23 @@ const AddIncome = () => {
   />
   
   <br />
+  <br />
+
+  <SelectField
+    lable_id="Account"
+    label_text="Choose Account"
+    value={account}
+    data={accountData}
+    change_function={(e) => setAccount(e.target.value)}
+    default_option_value=""
+    default_option_text="No Account"
+    value_key="id"
+    value_text="name"
+  />
+  
+  <br />
+  <br />
+
   <InputField
     field_type="number"
     placeholder_text="Amount"

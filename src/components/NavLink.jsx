@@ -8,6 +8,7 @@ import Register from "./Register/Register";
 import Income from "./Income/Income";
 import AddIncome from "./Income/AddIncome";
 import "./NavLink.css";
+import Account from "./Account.jsx/Account";
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
               <Link to="/expense">Expenses</Link>
             </li>
             <li>
+              <Link to="/account">Account</Link>
+            </li>
+            <li>
               <Link to="/income">Income</Link>
             </li>
             <li>
@@ -47,6 +51,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/category" element={<Category />} />
+            <Route path="/account" element={<Account />} />
             {/* <Route path="/item" element={<Item />} /> */}
             <Route path="/expense" element={<Expense />} />
             <Route path="/income" element={<Income />} />
