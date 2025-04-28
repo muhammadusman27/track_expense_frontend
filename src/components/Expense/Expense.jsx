@@ -26,10 +26,12 @@ const columns = [
 const Expense = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [allItems, setAllItems] = useState([]);
+  const [accountData, setAccountData] = useState([]);
   const [allExpenses, setAllExpenses] = useState([]);
 
   const [item, setItem] = useState(-1);
   const [category, setCategory] = useState(-1);
+  const [account, setAccount] = useState(-1);
   const [quantity, setQuantity] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -140,6 +142,7 @@ const Expense = () => {
     setDescription("");
     setItem(-1);
     setCategory(-1);
+    setAccount(-1);
     setQuantity("");
     setPrice("");
     setWeight("");
@@ -155,6 +158,7 @@ const Expense = () => {
       description: description,
       item: item === -1 ? null : item,
       category: category === -1 ? null : category,
+      account: account === -1 ? null : account,
       quantity: quantity,
       price: price,
       weight: weight === "" ? null : weight,
@@ -182,11 +186,21 @@ const Expense = () => {
       });
   };
 
+  const get_all_account_data = () => {
+    axiosInstance.get("account_balance/list_account").then((response) => {
+      if (response.status === 200) {
+        setAccountData(response.data["data"]);
+        console.log("account data = ", response.data["data"]);
+      }
+    });
+  };
+
   useEffect(() => {
     get_all_expenses();
     get_all_items();
     get_all_categories();
     get_all_chart_data();
+    get_all_account_data()
   }, []);
 
   return (
@@ -205,6 +219,19 @@ const Expense = () => {
           field_value={description}
           field_on_change={(e) => setDescription(e.target.value)}
         />
+        <br />
+        <SelectField
+          lable_id="Account"
+          label_text="Choose Account"
+          value={account}
+          data={accountData}
+          change_function={(e) => setAccount(e.target.value)}
+          default_option_value=""
+          default_option_text="No Account"
+          value_key="id"
+          value_text="name"
+        />
+        {/*  */}
         <br />
         <SelectField
           lable_id="category"

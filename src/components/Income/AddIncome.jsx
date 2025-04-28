@@ -5,6 +5,13 @@ import SelectField from "../ui/SelectField/SelectField";
 import axiosInstance from "../../axiosInstance";
 import Table from "../ui/Table/Table";
 
+const columns = [
+  { key: "account_name", label: "Account Name" },
+  { key: "income_name", label: "Income Name" },
+  { key: "amount", label: "Income Amount" },
+  { key: "date", label: "Date" },
+];
+
 const AddIncome = () => {
   const [incomeData, setIncomeData] = useState();
   const [accountData, setAccountData] = useState();
@@ -147,11 +154,11 @@ const AddIncome = () => {
         <p>Add Income</p>
       )}
       <hr />
-      {/* {incomeAmountData && incomeAmountData.length > 0 ? (
-        <Table columns={columns} data={incomeAmountData} edit_fun={setEditIncome} />
+      {incomeAmountData && incomeAmountData.length > 0 ? (
+        <Table columns={columns} data={incomeAmountData} edit_fun={ () => console.log()} />
       ) : (
         <p>no data</p>
-      )} */}
+      )}
     </>
   );
 };
